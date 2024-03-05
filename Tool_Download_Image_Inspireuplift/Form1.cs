@@ -81,6 +81,21 @@ namespace Tool_Download_Image_Inspireuplift
             }
             return shopName;
         }
+        public string RegexSection_id_Etsy()
+        {
+            string linkShop = txtLinkShop.Text.Trim();
+
+            string shopName = "";
+            string pattern = @"section_id=(\d+)";
+
+            Match match = Regex.Match(linkShop, pattern);
+
+            if (match.Success)
+            {
+                shopName = match.Groups[1].Value;
+            }
+            return shopName;
+        }
         private void btnDownload_Click(object sender, EventArgs e)
         {
             dem = 0;
@@ -206,6 +221,7 @@ namespace Tool_Download_Image_Inspireuplift
             dem = 0;
             pageEsty = 0;
             string regexNameShop = RegexShopName_Etsy();
+            string regexSection_Id = RegexSection_id_Etsy();
             if (regexNameShop != "")
             {
                 try
@@ -213,7 +229,15 @@ namespace Tool_Download_Image_Inspireuplift
                     LogStatusLable("Running Get HTML");
                     LogStatusRichTetxbox(Color.BlueViolet, "Running Get HTML");
 
-                    List<Variable_Data_Image_GetHTML> listData = Etsy_Controller.GetListUrls_Etsy(regexNameShop);
+                    List<Variable_Data_Image_GetHTML> listData = new List<Variable_Data_Image_GetHTML> ();
+                    if(regexSection_Id == "")
+                    {
+                        listData = Etsy_Controller.GetListUrls_Etsy(regexNameShop);
+                    }
+                    else
+                    {
+                        listData = Etsy_Controller.GetListUrls_Etsy_Section_id(regexNameShop,0, regexSection_Id);
+                    }
 
                     LogStatusRichTetxbox(Color.BlueViolet, "Get HTML Done ----->");
 
@@ -232,7 +256,14 @@ namespace Tool_Download_Image_Inspireuplift
                         LogStatusLable("Running Get HTML");
                         LogStatusRichTetxbox(Color.BlueViolet, "Running Get HTML");
 
-                        listData = Etsy_Controller.GetListUrls_Etsy(regexNameShop, pageEsty * 36);
+                        if (regexSection_Id == "")
+                        {
+                            listData = Etsy_Controller.GetListUrls_Etsy(regexNameShop, pageEsty * 36);
+                        }
+                        else
+                        {
+                            listData = Etsy_Controller.GetListUrls_Etsy_Section_id(regexNameShop, pageEsty * 36, regexSection_Id);
+                        }
 
                         LogStatusRichTetxbox(Color.BlueViolet, "Get HTML Done ----->");
 

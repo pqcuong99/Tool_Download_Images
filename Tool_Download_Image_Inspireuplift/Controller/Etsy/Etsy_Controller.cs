@@ -25,6 +25,17 @@ namespace Tool_Download_Image_Inspireuplift.Controller.Etsy
             List<Variable_Data_Image_GetHTML> listData = Etsy_Controller.ExtractRegex_Data_Esty_HTML(cv.html);
             return listData;
         }
+        public static List<Variable_Data_Image_GetHTML> GetListUrls_Etsy_Section_id(string nameShop, int cout = 0, string section_id = "")
+        {
+            dataLV = "";
+            Api_Custommer api_ = new Api_Custommer();
+            string res = api_.GetHTML_Image_Etsy(nameShop, cout, section_id);
+            var cv = JsonConvert.DeserializeObject<Response_Etsy_GetHtml>(res);
+            countItems = Int32.Parse(cv.total_count);
+
+            List<Variable_Data_Image_GetHTML> listData = Etsy_Controller.ExtractRegex_Data_Esty_HTML(cv.html);
+            return listData;
+        }
         public static List<Variable_Data_Image_GetHTML> ExtractRegex_Data_Esty_HTML(string text)
         {
              string pattern = @"<div[^>]+?class=""placeholder-content[^>]+?"
