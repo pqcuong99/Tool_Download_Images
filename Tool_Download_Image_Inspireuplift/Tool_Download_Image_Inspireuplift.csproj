@@ -67,6 +67,7 @@
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
     <Compile Include="Model\Etsy\Response_Etsy_GetHtml.cs" />
+    <Compile Include="Model\Redbubble\Variable_redbubble.cs" />
     <Compile Include="Model\ResponseGetURL_Image.cs" />
     <Compile Include="Model\Url_Mannager.cs" />
     <Compile Include="Program.cs" />
