@@ -14,22 +14,22 @@ namespace Tool_Download_Image_Inspireuplift.Controller.Etsy
     {
         public static int countItems = 0;
         public static string dataLV = "";
-       public static List<Variable_Data_Image_GetHTML> GetListUrls_Etsy(string nameShop,int cout = 0)
+       public static List<Variable_Data_Image_GetHTML> GetListUrls_Etsy(string nameShop,int cout = 0,string idShop = "")
         {
             dataLV = "";
             Api_Custommer api_ = new Api_Custommer();
-            string res = api_.GetHTML_Image_Etsy(nameShop, cout);
+            string res = api_.GetHTML_Image_Etsy(nameShop, cout, idShop);
             var cv = JsonConvert.DeserializeObject<Response_Etsy_GetHtml>(res);
             countItems = Int32.Parse(cv.total_count);
 
             List<Variable_Data_Image_GetHTML> listData = Etsy_Controller.ExtractRegex_Data_Esty_HTML(cv.html);
             return listData;
         }
-        public static List<Variable_Data_Image_GetHTML> GetListUrls_Etsy_Section_id(string nameShop, int cout = 0, string section_id = "")
+        public static List<Variable_Data_Image_GetHTML> GetListUrls_Etsy_Section_id(string nameShop, int cout = 0, string idShop = "", string section_id = "")
         {
             dataLV = "";
             Api_Custommer api_ = new Api_Custommer();
-            string res = api_.GetHTML_Image_Etsy(nameShop, cout, section_id);
+            string res = api_.GetHTML_Image_Etsy(nameShop, cout, idShop, section_id);
             var cv = JsonConvert.DeserializeObject<Response_Etsy_GetHtml>(res);
             countItems = Int32.Parse(cv.total_count);
 
@@ -99,7 +99,28 @@ namespace Tool_Download_Image_Inspireuplift.Controller.Etsy
                 return string.Empty; // Return empty string if no match found
             }
         }
+        public static string RegexId_Shop_Etsy(string text)
+        {
+            const string pattern = @"data-shop-id=""(\d+)"""; // Optimized pattern
 
+            var match = Regex.Match(text, pattern);
+
+            if (match.Success)
+            {
+                return match.Groups[1].Value; // Extract the content group (group 1)
+            }
+            else
+            {
+                return string.Empty; // Return empty string if no match found
+            }
+        }
+        public static string Get_ID_shop_Etsy(string nameShop)
+        {
+            Api_Custommer api_ = new Api_Custommer();
+            string res = api_.GetHTML_ID_Shop_Etsy(nameShop);
+            string id = RegexId_Shop_Etsy(res);
+            return id;
+        }
         public static int pageTotal()
         {
             return countItems / 36;

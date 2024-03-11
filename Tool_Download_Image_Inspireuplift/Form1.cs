@@ -39,18 +39,39 @@ namespace Tool_Download_Image_Inspireuplift
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            string exePath = Environment.CurrentDirectory;
+            string dataShow = DownloadHelper.ReadOrCreateFile(exePath + "\\DataForm.txt");
+            if(dataShow == "")
+            {
+                txtLinkShop.Text = "";
+                txtNameSheet.Text = "";
+                txtPathSave.Text = "";
+                txtPrice.Text = "4";
+                txtProduct_category.Text = "Digital Illustration";
+            }
+            else
+            {
+                string[] arrData = dataShow.Split('|');
+                txtPathSave.Text = arrData[0];
+                txtNameSheet.Text = arrData[1];
+                txtProduct_category.Text = arrData[2];
+                txtPrice.Text = arrData[3];
+                txtPathSave.Text = arrData[4];
+                
+            }
             txtSlDownloadDone.Text = "";
             List<string> list = new List<string>();
             list.Add("Inspire Uplift");
             list.Add("Esty");
-            list.Add("Redbubble");
-            list.Add("Printify");
-            list.Add("Printdoors");
-            list.Add("Odoo");
-            list.Add("Customcat");
-            list.Add("Vectown");
+            //list.Add("Redbubble");
+            //list.Add("Printify");
+            //list.Add("Printdoors");
+            //list.Add("Odoo");
+            //list.Add("Customcat");
+            //list.Add("Vectown");
             cbbType.DataSource = list;
         }
+        
         public string RegexShopName_Inspire()
         {
             string linkShop = txtLinkShop.Text.Trim();
@@ -99,6 +120,7 @@ namespace Tool_Download_Image_Inspireuplift
         private void btnDownload_Click(object sender, EventArgs e)
         {
             dem = 0;
+            SaveDataForm();
             Thread thread = new Thread(() =>
             {
                 if (TypeRadioWebsite == "Inspire Uplift")
@@ -116,13 +138,26 @@ namespace Tool_Download_Image_Inspireuplift
                 }
                 if (TypeRadioWebsite == "Esty")
                 {
-                    
+                    SetEnableButtonDownload(false);
                     RunDownload_Etsys();
                 }
                
             });
             thread.IsBackground = true;
             thread.Start();
+        }
+        public void SaveDataForm()
+        {
+            string nameSheet = txtNameSheet.Text.Trim();
+            string price = txtPrice.Text.Trim();
+            string product = txtProduct_category.Text.Trim();
+            string pathSave = txtPathSave.Text.Trim();
+
+            string dataForm = pathSave + "|" + nameSheet + "|" + product + "|" + price;
+
+            string exePath = Environment.CurrentDirectory;
+
+            DownloadHelper.SaveDataForm(exePath + "\\DataForm.txt",dataForm);
         }
         
         public void RunGetShopName()
@@ -187,6 +222,7 @@ namespace Tool_Download_Image_Inspireuplift
 
                     descriptions += data.title + "\n";
                     pathImages += path_ + "\n";
+                    DownloadHelper.WriteToExcel(pathSave + "\\descriptions.txt", descriptions);
                 }
                 DownloadHelper.SaveText(pathSave + "\\descriptions.txt", descriptions);
                 DownloadHelper.SaveText(pathSave + "\\pathImages.txt", pathImages);
@@ -200,6 +236,7 @@ namespace Tool_Download_Image_Inspireuplift
         private void btnDownload1Page_Click(object sender, EventArgs e)
         {
             dem = 0;
+            SaveDataForm();
             richTextBox1.Text = "";
             Thread thread = new Thread(() =>
             {
@@ -226,17 +263,23 @@ namespace Tool_Download_Image_Inspireuplift
             {
                 try
                 {
+                    string idShop = Etsy_Controller.Get_ID_shop_Etsy(regexNameShop);
+                    if(idShop == string.Empty)
+                    {
+                        LogStatusLable("Get id shop error");
+                        return;
+                    }
                     LogStatusLable("Running Get HTML");
                     LogStatusRichTetxbox(Color.BlueViolet, "Running Get HTML");
 
                     List<Variable_Data_Image_GetHTML> listData = new List<Variable_Data_Image_GetHTML> ();
                     if(regexSection_Id == "")
                     {
-                        listData = Etsy_Controller.GetListUrls_Etsy(regexNameShop);
+                        listData = Etsy_Controller.GetListUrls_Etsy(regexNameShop, pageEsty, idShop);
                     }
                     else
                     {
-                        listData = Etsy_Controller.GetListUrls_Etsy_Section_id(regexNameShop,0, regexSection_Id);
+                        listData = Etsy_Controller.GetListUrls_Etsy_Section_id(regexNameShop,0, idShop, regexSection_Id);
                     }
 
                     LogStatusRichTetxbox(Color.BlueViolet, "Get HTML Done ----->");
@@ -258,11 +301,11 @@ namespace Tool_Download_Image_Inspireuplift
 
                         if (regexSection_Id == "")
                         {
-                            listData = Etsy_Controller.GetListUrls_Etsy(regexNameShop, pageEsty * 36);
+                            listData = Etsy_Controller.GetListUrls_Etsy(regexNameShop, pageEsty * 36, idShop);
                         }
                         else
                         {
-                            listData = Etsy_Controller.GetListUrls_Etsy_Section_id(regexNameShop, pageEsty * 36, regexSection_Id);
+                            listData = Etsy_Controller.GetListUrls_Etsy_Section_id(regexNameShop, pageEsty * 36, idShop, regexSection_Id);
                         }
 
                         LogStatusRichTetxbox(Color.BlueViolet, "Get HTML Done ----->");
@@ -271,6 +314,7 @@ namespace Tool_Download_Image_Inspireuplift
                     }
                     Etsy_Controller.resetCountItems();
                     LogStatusLable("Download xong roi!");
+                    
                 }
                 catch (Exception ex)
                 {
@@ -281,6 +325,7 @@ namespace Tool_Download_Image_Inspireuplift
                     }));
                 }
             }
+            SetEnableButtonDownload(true);
         }
         public void RunSaveImageEstys(List<Variable_Data_Image_GetHTML> listData,string pathSave)
         {
@@ -337,17 +382,41 @@ namespace Tool_Download_Image_Inspireuplift
             }));
 
         }
+        public void SetEnableButtonDownload(bool enable)
+        {
+            btnDownload.Invoke(new MethodInvoker(() =>
+            {
+                btnDownload.Enabled = enable;
+                btnDownload1Page.Enabled = enable;
+            }));
+            
+        }
         public void RunDownload_Etsy()
         {
             string regexNameShop = RegexShopName_Etsy();
+            string regexSection_Id = RegexSection_id_Etsy();
             if (regexNameShop != "")
             {
                 try
                 {
+                    string idShop = Etsy_Controller.Get_ID_shop_Etsy(regexNameShop);
+                    if (idShop == string.Empty || idShop == "")
+                    {
+                        LogStatusLable("Get id shop error");
+                        return;
+                    }
                     LogStatusLable("Running Get HTML");
                     LogStatusRichTetxbox(Color.BlueViolet, txtSlDownloadDone.Text);
 
-                    var listData = Etsy_Controller.GetListUrls_Etsy(regexNameShop);
+                    List<Variable_Data_Image_GetHTML> listData = new List<Variable_Data_Image_GetHTML>();
+                    if (regexSection_Id == "")
+                    {
+                        listData = Etsy_Controller.GetListUrls_Etsy(regexNameShop, 0, idShop);
+                    }
+                    else
+                    {
+                        listData = Etsy_Controller.GetListUrls_Etsy_Section_id(regexNameShop, 0, idShop, regexSection_Id);
+                    }
 
                     LogStatusRichTetxbox(Color.BlueViolet, "Get HTML Done -----> ");
 
@@ -364,6 +433,20 @@ namespace Tool_Download_Image_Inspireuplift
                 catch (Exception ex)
                 {
                     LogStatusRichTetxbox(Color.Red, ex.Message);
+                }
+            }
+            SetEnableButtonDownload(true);
+        }
+
+        private void btnChose_Click(object sender, EventArgs e)
+        {
+            using (var fbd = new FolderBrowserDialog())
+            {
+                DialogResult result = fbd.ShowDialog();
+
+                if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.SelectedPath))
+                {
+                    txtPathSave.Text = fbd.SelectedPath;
                 }
             }
         }
