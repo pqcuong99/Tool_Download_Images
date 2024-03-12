@@ -37,14 +37,6 @@
             this.txtSlDownloadDone = new System.Windows.Forms.Label();
             this.btnDownload1Page = new System.Windows.Forms.Button();
             this.cbbType = new System.Windows.Forms.ComboBox();
-            this.btnChose = new System.Windows.Forms.Button();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
-            this.txtNameSheet = new System.Windows.Forms.TextBox();
-            this.txtPrice = new System.Windows.Forms.TextBox();
-            this.txtProduct_category = new System.Windows.Forms.TextBox();
-            this.label5 = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // label1
@@ -69,7 +61,7 @@
             // 
             this.txtPathSave.Location = new System.Drawing.Point(30, 117);
             this.txtPathSave.Name = "txtPathSave";
-            this.txtPathSave.Size = new System.Drawing.Size(290, 20);
+            this.txtPathSave.Size = new System.Drawing.Size(359, 20);
             this.txtPathSave.TabIndex = 2;
             this.txtPathSave.Text = "D:\\TEST_SAVE_IMAGE";
             // 
@@ -84,7 +76,7 @@
             // 
             // btnDownload
             // 
-            this.btnDownload.Location = new System.Drawing.Point(139, 273);
+            this.btnDownload.Location = new System.Drawing.Point(137, 225);
             this.btnDownload.Name = "btnDownload";
             this.btnDownload.Size = new System.Drawing.Size(107, 23);
             this.btnDownload.TabIndex = 4;
@@ -94,16 +86,16 @@
             // 
             // richTextBox1
             // 
-            this.richTextBox1.Location = new System.Drawing.Point(30, 319);
+            this.richTextBox1.Location = new System.Drawing.Point(30, 270);
             this.richTextBox1.Name = "richTextBox1";
-            this.richTextBox1.Size = new System.Drawing.Size(359, 257);
+            this.richTextBox1.Size = new System.Drawing.Size(359, 230);
             this.richTextBox1.TabIndex = 5;
             this.richTextBox1.Text = "";
             // 
             // txtSlDownloadDone
             // 
             this.txtSlDownloadDone.AutoSize = true;
-            this.txtSlDownloadDone.Location = new System.Drawing.Point(252, 278);
+            this.txtSlDownloadDone.Location = new System.Drawing.Point(250, 230);
             this.txtSlDownloadDone.Name = "txtSlDownloadDone";
             this.txtSlDownloadDone.Size = new System.Drawing.Size(100, 13);
             this.txtSlDownloadDone.TabIndex = 6;
@@ -111,7 +103,7 @@
             // 
             // btnDownload1Page
             // 
-            this.btnDownload1Page.Location = new System.Drawing.Point(32, 273);
+            this.btnDownload1Page.Location = new System.Drawing.Point(30, 225);
             this.btnDownload1Page.Name = "btnDownload1Page";
             this.btnDownload1Page.Size = new System.Drawing.Size(101, 23);
             this.btnDownload1Page.TabIndex = 7;
@@ -122,92 +114,17 @@
             // cbbType
             // 
             this.cbbType.FormattingEnabled = true;
-            this.cbbType.Location = new System.Drawing.Point(30, 231);
+            this.cbbType.Location = new System.Drawing.Point(30, 167);
             this.cbbType.Name = "cbbType";
             this.cbbType.Size = new System.Drawing.Size(359, 21);
             this.cbbType.TabIndex = 8;
             this.cbbType.SelectedIndexChanged += new System.EventHandler(this.cbbType_SelectedIndexChanged);
             // 
-            // btnChose
-            // 
-            this.btnChose.Location = new System.Drawing.Point(326, 115);
-            this.btnChose.Name = "btnChose";
-            this.btnChose.Size = new System.Drawing.Size(63, 22);
-            this.btnChose.TabIndex = 9;
-            this.btnChose.Text = "Choose";
-            this.btnChose.UseVisualStyleBackColor = true;
-            this.btnChose.Click += new System.EventHandler(this.btnChose_Click);
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(29, 157);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(64, 13);
-            this.label3.TabIndex = 10;
-            this.label3.Text = "Name sheet";
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(327, 157);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(31, 13);
-            this.label4.TabIndex = 11;
-            this.label4.Text = "Price";
-            // 
-            // txtNameSheet
-            // 
-            this.txtNameSheet.Location = new System.Drawing.Point(30, 173);
-            this.txtNameSheet.Name = "txtNameSheet";
-            this.txtNameSheet.Size = new System.Drawing.Size(103, 20);
-            this.txtNameSheet.TabIndex = 12;
-            // 
-            // txtPrice
-            // 
-            this.txtPrice.Location = new System.Drawing.Point(330, 173);
-            this.txtPrice.Name = "txtPrice";
-            this.txtPrice.Size = new System.Drawing.Size(52, 20);
-            this.txtPrice.TabIndex = 13;
-            // 
-            // txtProduct_category
-            // 
-            this.txtProduct_category.Location = new System.Drawing.Point(161, 173);
-            this.txtProduct_category.Name = "txtProduct_category";
-            this.txtProduct_category.Size = new System.Drawing.Size(143, 20);
-            this.txtProduct_category.TabIndex = 14;
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(158, 157);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(88, 13);
-            this.label5.TabIndex = 15;
-            this.label5.Text = "Product category";
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(29, 215);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(31, 13);
-            this.label6.TabIndex = 16;
-            this.label6.Text = "Type";
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(416, 598);
-            this.Controls.Add(this.label6);
-            this.Controls.Add(this.label5);
-            this.Controls.Add(this.txtProduct_category);
-            this.Controls.Add(this.txtPrice);
-            this.Controls.Add(this.txtNameSheet);
-            this.Controls.Add(this.label4);
-            this.Controls.Add(this.label3);
-            this.Controls.Add(this.btnChose);
+            this.ClientSize = new System.Drawing.Size(416, 521);
             this.Controls.Add(this.cbbType);
             this.Controls.Add(this.btnDownload1Page);
             this.Controls.Add(this.txtSlDownloadDone);
@@ -236,14 +153,6 @@
         private System.Windows.Forms.Label txtSlDownloadDone;
         private System.Windows.Forms.Button btnDownload1Page;
         private System.Windows.Forms.ComboBox cbbType;
-        private System.Windows.Forms.Button btnChose;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.TextBox txtNameSheet;
-        private System.Windows.Forms.TextBox txtPrice;
-        private System.Windows.Forms.TextBox txtProduct_category;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.Label label6;
     }
 }
 
