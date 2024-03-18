@@ -43,13 +43,49 @@ namespace Tool_Download_Image_Inspireuplift
             List<string> list = new List<string>();
             list.Add("Inspire Uplift");
             list.Add("Esty");
-            list.Add("Redbubble");
-            list.Add("Printify");
-            list.Add("Printdoors");
-            list.Add("Odoo");
-            list.Add("Customcat");
-            list.Add("Vectown");
+            //list.Add("Redbubble");
+            //list.Add("Printify");
+            //list.Add("Printdoors");
+            //list.Add("Odoo");
+            //list.Add("Customcat");
+            //list.Add("Vectown");
             cbbType.DataSource = list;
+
+            string exePath = Environment.CurrentDirectory;
+            string dataForm = DownloadHelper.ReadOrCreateFile(exePath + "\\DataForm.txt");
+            if(dataForm == "")
+            {
+                txtLinkShop.Text = "";
+                txtNameSheet.Text = "";
+                txtPathSave.Text = "";
+                txtPathZip.Text = "";
+                txtPrice.Text = "";
+                txtProduct.Text = "";
+            }
+            else
+            {
+                string[] arrDataForm = dataForm.Split('|');
+                txtLinkShop.Text = arrDataForm[0];
+                txtPathSave.Text = arrDataForm[1];
+                txtNameSheet.Text = arrDataForm[2];
+                txtProduct.Text = arrDataForm[3];
+                txtPrice.Text = arrDataForm[4];
+                txtPathZip.Text = arrDataForm[5];
+            }
+        }
+        public void SaveDataform()
+        {
+            string exePath = Environment.CurrentDirectory;
+
+            string linkShop = txtLinkShop.Text.Trim();
+            string pathSave = txtPathSave.Text.Trim();
+            string nameSheet = txtNameSheet.Text.Trim();
+            string product = txtProduct.Text.Trim();
+            string price = txtPrice.Text.Trim();
+            string pathZip = txtPathZip.Text.Trim();
+
+            string dataFormSave = linkShop + "|" + pathSave + "|" + nameSheet + "|" + product + "|" + price + "|" + pathZip;
+            DownloadHelper.WriteFileDataForm(exePath + "\\DataForm.txt", dataFormSave);
         }
         public string RegexShopName_Inspire()
         {
@@ -99,6 +135,8 @@ namespace Tool_Download_Image_Inspireuplift
         private void btnDownload_Click(object sender, EventArgs e)
         {
             dem = 0;
+            SaveDataform();
+            richTextBox1.Text = "";
             Thread thread = new Thread(() =>
             {
                 if (TypeRadioWebsite == "Inspire Uplift")
@@ -160,7 +198,7 @@ namespace Tool_Download_Image_Inspireuplift
             {
                 // khoi tao folder shop de luu anh
                 pathSave = DownloadHelper.CreateFolder(pathSave, shopName);
-
+                string pathExcel = pathSave + "\\DataExcel.xlsx";
                 //khoi tao folder page
                 pathSave = DownloadHelper.CreateFolder(pathSave, "page- " + page);
                 string descriptions = "";
@@ -187,6 +225,11 @@ namespace Tool_Download_Image_Inspireuplift
 
                     descriptions += data.title + "\n";
                     pathImages += path_ + "\n";
+
+
+                    SaveExcelData(pathExcel, data.title, path_);
+                    //log status
+                    LogStatusRichTetxbox(Color.Green, "--------SaveExcelData ------>: ");
                 }
                 DownloadHelper.SaveText(pathSave + "\\descriptions.txt", descriptions);
                 DownloadHelper.SaveText(pathSave + "\\pathImages.txt", pathImages);
@@ -201,6 +244,7 @@ namespace Tool_Download_Image_Inspireuplift
         {
             dem = 0;
             richTextBox1.Text = "";
+            SaveDataform();
             Thread thread = new Thread(() =>
             {
                 if(TypeRadioWebsite == "Inspire Uplift")
@@ -211,11 +255,11 @@ namespace Tool_Download_Image_Inspireuplift
                 {
                     RunDownload_Etsy();
                 }
-                if(TypeRadioWebsite == "Redbubble")
-                {
-                    Api_Custommer api_ = new Api_Custommer();
-                    api_.GetHTML_Image_Redbubble("rubyandpearl");
-                }
+                //if(TypeRadioWebsite == "Redbubble")
+                //{
+                //    Api_Custommer api_ = new Api_Custommer();
+                //    api_.GetHTML_Image_Redbubble("rubyandpearl");
+                //}
                 
             });
             thread.IsBackground = true;
@@ -231,17 +275,23 @@ namespace Tool_Download_Image_Inspireuplift
             {
                 try
                 {
+                    string idShop = Etsy_Controller.Get_ID_shop_Etsy(regexNameShop);
+                    if (idShop == string.Empty)
+                    {
+                        LogStatusLable("Get id shop error");
+                        return;
+                    }
                     LogStatusLable("Running Get HTML");
                     LogStatusRichTetxbox(Color.BlueViolet, "Running Get HTML");
 
                     List<Variable_Data_Image_GetHTML> listData = new List<Variable_Data_Image_GetHTML> ();
                     if(regexSection_Id == "")
                     {
-                        listData = Etsy_Controller.GetListUrls_Etsy(regexNameShop);
+                        listData = Etsy_Controller.GetListUrls_Etsy(regexNameShop, pageEsty, idShop);
                     }
                     else
                     {
-                        listData = Etsy_Controller.GetListUrls_Etsy_Section_id(regexNameShop,0, regexSection_Id);
+                        listData = Etsy_Controller.GetListUrls_Etsy_Section_id(regexNameShop, 0, idShop, regexSection_Id);
                     }
 
                     LogStatusRichTetxbox(Color.BlueViolet, "Get HTML Done ----->");
@@ -263,11 +313,11 @@ namespace Tool_Download_Image_Inspireuplift
 
                         if (regexSection_Id == "")
                         {
-                            listData = Etsy_Controller.GetListUrls_Etsy(regexNameShop, pageEsty * 36);
+                            listData = Etsy_Controller.GetListUrls_Etsy(regexNameShop, pageEsty * 36, idShop);
                         }
                         else
                         {
-                            listData = Etsy_Controller.GetListUrls_Etsy_Section_id(regexNameShop, pageEsty * 36, regexSection_Id);
+                            listData = Etsy_Controller.GetListUrls_Etsy_Section_id(regexNameShop, pageEsty * 36, idShop, regexSection_Id);
                         }
 
                         LogStatusRichTetxbox(Color.BlueViolet, "Get HTML Done ----->");
@@ -290,6 +340,8 @@ namespace Tool_Download_Image_Inspireuplift
         public void RunSaveImageEstys(List<Variable_Data_Image_GetHTML> listData,string pathSave)
         {
             pageEsty++;
+            
+            string pathExcel = pathSave + "\\DataExcel.xlsx";
             pathSave = DownloadHelper.CreateFolder(pathSave, "page - "+ pageEsty);
             string descriptions = "";
             string pathImages = "";
@@ -308,15 +360,28 @@ namespace Tool_Download_Image_Inspireuplift
 
                     //log status
                     LogStatusRichTetxbox(Color.Blue, "save done -----> : " + timeSpan_tostring + ".png");
-
-                    descriptions += item.tittle + "\n";
+                    string[] itemTittles = item.tittle.Split(' ');
+                    string itemTittle = "";
+                    foreach (var tittle in itemTittles)
+                    {
+                        if((itemTittle+ tittle).Length < 82)
+                        {
+                            itemTittle += tittle +" ";
+                        }
+                    }
+                    itemTittle += DownloadHelper.GenerateRandomSKU(6);
+                    descriptions += itemTittle + "\n";
                     pathImages += path_ + "\n";
+                    SaveExcelData(pathExcel, itemTittle, path_);
+                    //log status
+                    LogStatusRichTetxbox(Color.Green, "--------SaveExcelData ------>: ");
                 }
                 catch (Exception ex)
                 {
                     LogStatusRichTetxbox(Color.Red, ex.Message);
                 }
             }
+            LogStatusRichTetxbox(Color.Green, $"<-------- SAVE PAGE {pageEsty} DONE------>: ");
             DownloadHelper.SaveText(pathSave + "\\descriptions.txt", descriptions);
             DownloadHelper.SaveText(pathSave + "\\pathImages.txt", pathImages);
         }
@@ -345,14 +410,29 @@ namespace Tool_Download_Image_Inspireuplift
         public void RunDownload_Etsy()
         {
             string regexNameShop = RegexShopName_Etsy();
+            string regexSection_Id = RegexSection_id_Etsy();
             if (regexNameShop != "")
             {
                 try
                 {
+                    string idShop = Etsy_Controller.Get_ID_shop_Etsy(regexNameShop);
+                    if (idShop == string.Empty || idShop == "")
+                    {
+                        LogStatusLable("Get id shop error");
+                        return;
+                    }
                     LogStatusLable("Running Get HTML");
                     LogStatusRichTetxbox(Color.BlueViolet, txtSlDownloadDone.Text);
 
-                    var listData = Etsy_Controller.GetListUrls_Etsy(regexNameShop);
+                    List<Variable_Data_Image_GetHTML> listData = new List<Variable_Data_Image_GetHTML>();
+                    if (regexSection_Id == "")
+                    {
+                        listData = Etsy_Controller.GetListUrls_Etsy(regexNameShop, 0, idShop);
+                    }
+                    else
+                    {
+                        listData = Etsy_Controller.GetListUrls_Etsy_Section_id(regexNameShop, 0, idShop, regexSection_Id);
+                    }
 
                     LogStatusRichTetxbox(Color.BlueViolet, "Get HTML Done -----> ");
 
@@ -371,6 +451,45 @@ namespace Tool_Download_Image_Inspireuplift
                     LogStatusRichTetxbox(Color.Red, ex.Message);
                 }
             }
+        }
+        public void SaveExcelData(string pathExcel,string tittle,string pathImage)
+        {
+            string nameSheet = txtNameSheet.Text.Trim();
+            string product = txtProduct.Text.Trim();
+            string price = txtPrice.Text.Trim();
+            string pathZip = txtPathZip.Text.Trim();
+            DownloadHelper.WriteToExcel(pathExcel,nameSheet,tittle,product,pathImage,price,pathZip);
+        }
+        private void label4_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnChoose_Click(object sender, EventArgs e)
+        {
+            using (var fbd = new FolderBrowserDialog())
+            {
+                DialogResult result = fbd.ShowDialog();
+
+                if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.SelectedPath))
+                {
+                    txtPathSave.Text = fbd.SelectedPath;
+                }
+            }
+        }
+        public void SetEnableButtonDownload(bool enable)
+        {
+            btnDownload.Invoke(new MethodInvoker(() =>
+            {
+                btnDownload.Enabled = enable;
+                btnDownload1Page.Enabled = enable;
+            }));
+
+        }
+
+        private void richTextBox1_TextChanged(object sender, EventArgs e)
+        {
+            richTextBox1.ScrollToCaret();
         }
     }
 }
