@@ -1,4 +1,64 @@
+# Build results
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm][Ee][Ff][Ff]/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+
+# Visual Studio specific
+.vs/
+*.sln.ide
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.cache
+*.pdb
+*.ilk
+*.idb
+*.ipch/
+*.tlog/
+*.sdf
+*.opensdf
+*.suo
+
+# Rider specific
+.idea/
+
+# NuGet Packages
+*.nupkg
+**/packages/*
+
+# Visual Studio Code
+.vscode/
+.history/
+
+# User-specific files
+*.userprefs
+
+# Rider specific
+.idea/
+
+# Temporary files
+*.tmp
+*.temp
+*.log
+
+# Other files
+*.dll
 *.exe
 *.pdb
-*.manifest
 *.cache
+*.mdb
+*.dbmdl
+*.dbproj.schemaview
+
+# Coverage files
+*.coverage
+*.coverlet.xml
+
+# Project
