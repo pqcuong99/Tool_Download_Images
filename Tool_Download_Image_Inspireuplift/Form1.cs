@@ -18,6 +18,7 @@ using System.Xml.Linq;
 using Tool_Download_Image_Inspireuplift.Controller;
 using Tool_Download_Image_Inspireuplift.Controller.Etsy;
 using Tool_Download_Image_Inspireuplift.Controller.InspireUplife;
+using Tool_Download_Image_Inspireuplift.Controller.Instagram;
 using Tool_Download_Image_Inspireuplift.Model;
 using Tool_Download_Image_Inspireuplift.Model.Etsy;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
@@ -43,6 +44,7 @@ namespace Tool_Download_Image_Inspireuplift
             List<string> list = new List<string>();
             list.Add("Inspire Uplift");
             list.Add("Esty");
+            list.Add("Instagram");
             //list.Add("Redbubble");
             //list.Add("Printify");
             //list.Add("Printdoors");
@@ -157,7 +159,12 @@ namespace Tool_Download_Image_Inspireuplift
                     
                     RunDownload_Etsys();
                 }
-               
+                if (TypeRadioWebsite == "Instagram")
+                {
+
+                    RunDownloadInstagrams("all");
+                }
+
             });
             thread.IsBackground = true;
             thread.Start();
@@ -255,16 +262,38 @@ namespace Tool_Download_Image_Inspireuplift
                 {
                     RunDownload_Etsy();
                 }
+                if (TypeRadioWebsite == "Instagram")
+                {
+                    RunDownloadInstagrams("all");
+                }
                 //if(TypeRadioWebsite == "Redbubble")
                 //{
                 //    Api_Custommer api_ = new Api_Custommer();
                 //    api_.GetHTML_Image_Redbubble("rubyandpearl");
                 //}
-                
+
             });
             thread.IsBackground = true;
             thread.Start();
         }
+        public void RunDownloadInstagrams(string type = "all")
+        {
+            try
+            {
+                string url = txtLinkShop.Text.Trim();
+                string pathSave = txtPathSave.Text.Trim();
+                if(type == "all")
+                {
+                    string userInsta = InstagramController.RegexShopName(url);
+                    DownloadHelper.CreateFolder(pathSave, userInsta);
+                    bool result = InstagramController.GetDataUser(userInsta,null, pathSave+ $"\\{userInsta}");
+                    
+                }
+            }
+            catch (Exception ex) { 
+            }
+        }
+
         public void RunDownload_Etsys()
         {
             dem = 0;

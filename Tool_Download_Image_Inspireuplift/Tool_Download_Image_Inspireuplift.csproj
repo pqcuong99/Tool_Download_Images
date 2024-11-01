@@ -91,6 +91,7 @@
     <Compile Include="Controller\DownloadHelper.cs" />
     <Compile Include="Controller\Etsy\Etsy_Controller.cs" />
     <Compile Include="Controller\InspireUplife\InspireUplife_Controller.cs" />
+    <Compile Include="Controller\Instagram\InstagramController.cs" />
     <Compile Include="Controller\RegistryHelper.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
@@ -99,6 +100,8 @@
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
     <Compile Include="Model\Etsy\Response_Etsy_GetHtml.cs" />
+    <Compile Include="Model\Instagram\ResponseData.cs" />
+    <Compile Include="Model\Instagram\Variables.cs" />
     <Compile Include="Model\Redbubble\Variable_redbubble.cs" />
     <Compile Include="Model\ResponseGetURL_Image.cs" />
     <Compile Include="Model\Url_Mannager.cs" />
